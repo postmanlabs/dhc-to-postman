@@ -1,0 +1,20 @@
+POST /?urlKey1=urlValue1&urlKey2=urlValue2 HTTP/1.1
+headerKey1: headerValue1
+headerKey2: headerValue2
+Content-Type: multipart/form-data; charset=utf-8; boundary=__X_PAW_BOUNDARY__
+Host: <REQUEST URL>
+Connection: close
+User-Agent: Paw/2.4-beta.3 (Macintosh; OS X/10.11.3) GCDHTTPRequest
+Content-Length: 214
+
+--__X_PAW_BOUNDARY__
+Content-Disposition: form-data; name="multipartKey1"
+
+multipartValue1
+--__X_PAW_BOUNDARY__
+Content-Disposition: form-data; name="multipartKey2"
+
+multipartValue2
+--__X_PAW_BOUNDARY__--
+
+
