@@ -1,7 +1,7 @@
 var _ = require('lodash'),
 	uuid = require('node-uuid');
 
-var pawConverter = {
+var dhcConverter = {
 	requestGroups: [],
 	folderGroups: [],
 	headerGroups: [],
@@ -124,4 +124,4 @@ var pawConverter = {
 	},
 };
 
-module.exports = pawConverter;
+module.exports = dhcConverter;
