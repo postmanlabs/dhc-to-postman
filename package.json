@@ -1,32 +1,33 @@
 {
-    "name": "@postmanlabs/dhc-to-postman",
-    "version": "0.0.1",
-    "description": "Convert DHC Tests to Postman Collection v1",
-    "main": "index.js",
-    "publishConfig":{
-        "registry":"https://npm.postmanlabs.com"
-    },
-    "scripts": {
-        "test": "scripts/test.sh"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/abhijitkane/dhc-to-postman.git"
-    },
-    "keywords": [
-        "dhc",
-        "postman"
-    ],
-    "dependencies": {
-        "lodash": "^3.10.1",
-        "node-uuid": "1.4.1"
-    },
-    "devDependencies": {
-        "expect.js": "^0.3.1",
-        "jscs": "^2.1.0",
-        "jshint": "^2.8.0",
-        "mocha": "^2.2.5"
-    },
-    "author": "Postman Labs",
-    "license": "MIT"
+  "name": "@postman/dhc-to-postman",
+  "version": "0.0.1",
+  "description": "Convert DHC Tests to Postman Collection v1",
+  "main": "index.js",
+  "publishConfig": {
+    "registry": "https://npm.postmanlabs.com"
+  },
+  "scripts": {
+    "test": "scripts/test.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abhijitkane/dhc-to-postman.git"
+  },
+  "keywords": [
+    "dhc",
+    "postman"
+  ],
+  "dependencies": {
+    "lodash": "^3.10.1",
+    "node-uuid": "1.4.1"
+  },
+  "devDependencies": {
+    "expect.js": "^0.3.1",
+    "jscs": "^2.1.0",
+    "jshint": "^2.8.0",
+    "mocha": "^2.2.5"
+  },
+  "author": "Postman Labs",
+  "license": "MIT",
+  "private": 1
 }
