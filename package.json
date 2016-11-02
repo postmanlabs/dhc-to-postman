@@ -28,6 +28,5 @@
     "mocha": "^2.2.5"
   },
   "author": "Postman Labs",
-  "license": "MIT",
-  "private": 1
+  "license": "MIT"
 }
