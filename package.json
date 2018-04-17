@@ -1,6 +1,6 @@
 {
   "name": "@postman/dhc-to-postman",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Convert DHC Tests to Postman Collection v1",
   "main": "index.js",
   "publishConfig": {
@@ -18,8 +18,8 @@
     "postman"
   ],
   "dependencies": {
-    "lodash": ">=4.17.5",
-    "uuid": ">=3.2.1"
+    "lodash": "^4.17.5",
+    "uuid": "^3.2.1"
   },
   "devDependencies": {
     "expect.js": "^0.3.1",
