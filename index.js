@@ -1,5 +1,5 @@
 var _ = require('lodash'),
-	uuid = require('node-uuid');
+	uuidv4 = require('uuid/v4');
 
 var dhcConverter = {
 	requestGroups: [],
@@ -11,7 +11,7 @@ var dhcConverter = {
 
 	createCollection: function (name) {
 		return {
-			id: uuid.v4(),
+			id: uuidv4(),
 			name: name,
 			description: 'New collection (imported from DHC)',
 			order: [],
