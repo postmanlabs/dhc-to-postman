@@ -158,7 +158,6 @@ module.exports = {
 	validate:dhcConverter.validate,
 	convert:function(input,cb){
 		var conversionResult;
-		var check=false;
 		try{
 
 			conversionResult=dhcConverter.convert(input);
@@ -166,22 +165,18 @@ module.exports = {
 				if (error) {
 					throw error;
 				}
-				conversionResult=result;
+				cb(null,{
+					result:true,
+					type:'collection',
+					collection:result
+				});
 			});
-			check=true;
 		}
 		catch(e){
 			cb(e,{
 				result:false,
 				type:'collection',
 				reason:e
-			});
-		}
-		if(check){
-			cb(null,{
-				result:true,
-				type:'collection',
-				collection:conversionResult
 			});
 		}
 		
