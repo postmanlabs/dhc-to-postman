@@ -17,4 +17,5 @@ echo "mocha v`mocha --version`";
 
 mocha test/*-spec.js;
 
+chmod +x scripts/test-unit.sh;
 npm run test-unit;
