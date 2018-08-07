@@ -38,7 +38,7 @@ describe(package.name + ' should contains', function() {
         ConversionResult
       ) {
         expect(ConversionResult.result).to.be(true);
-        ConversionResult.output.forEach(element => {
+        ConversionResult.output.forEach(function(element) {
           expect(element.type).to.be('collection' || 'request');
           if (element.type === 'collection') {
             expect(element.data).to.have.property('info');
