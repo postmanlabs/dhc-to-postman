@@ -140,7 +140,7 @@ var dhcConverter = {
 		}
 		return{
 			result:true
-		}
+		};
 	  
 	}
 };
@@ -173,14 +173,14 @@ module.exports = {
 		catch(e){
 			cb(e,{
 				result:false,
-				type:"collection",
+				type:'collection',
 				reason:e
-			})
+			});
 		}
 		if(check){
 			cb(null,{
 				result:true,
-				type:"collection",
+				type:'collection',
 				collection:conversionResult
 			});
 		}

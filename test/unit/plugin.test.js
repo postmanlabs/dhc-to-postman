@@ -1,8 +1,8 @@
 var path = '../../',
-  expect = require('expect.js'),
-  mod = require(path),
-  package = require(path + '/package.json');
-
+    expect = require('expect.js'),
+    mod = require(path),
+    package = require(path + '/package.json');
+/* global describe, it */
 describe(package.name + ' should contains', function() {
   describe('com_postman_plugin attributes', function() {
     it('plugin_type', function() {
