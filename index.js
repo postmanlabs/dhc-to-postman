@@ -122,6 +122,69 @@ var dhcConverter = {
 		var collection = this.convertDhcProject(dhcJson);
 		return collection;
 	},
+	validate: function(dhcJson){
+		if(typeof dhcJson === 'string'){
+			dhcJson = JSON.parse(dhcJson);
+		}
+		if (!dhcJson.version) {
+			return {
+			  result: false,
+			  reason: 'The input object must have a "version" property'
+			};
+		}
+		if(!dhcJson.nodes){
+			return {
+				result: false,
+				reason: 'The input object must have a "nodes" property'
+			  };
+		}
+		return{
+			result:true
+		}
+	  
+	}
 };
 
-module.exports = dhcConverter;
+var transformer = require('postman-collection-transformer'),
+
+options = {
+	inputVersion: '1.0.0',
+	outputVersion: '2.0.0',
+	retainIds: true  // the transformer strips request-ids etc by default.
+};
+
+
+module.exports = {
+	validate:dhcConverter.validate,
+	convert:function(input,cb){
+		var conversionResult;
+		var check=false;
+		try{
+
+			conversionResult=dhcConverter.convert(input);
+			transformer.convert(conversionResult, options, function (error, result) {
+				if (error) {
+					throw error;
+				}
+				conversionResult=result;
+			});
+			check=true;
+		}
+		catch(e){
+			cb(e,{
+				result:false,
+				type:"collection",
+				reason:e
+			})
+		}
+		if(check){
+			cb(null,{
+				result:true,
+				type:"collection",
+				collection:conversionResult
+			});
+		}
+		
+
+	}
+};

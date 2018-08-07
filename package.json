@@ -3,11 +3,74 @@
   "version": "0.0.4",
   "description": "Convert DHC Tests to Postman Collection v1",
   "main": "index.js",
+  "com_postman_plugin": {
+    "plugin_type": "importer",
+    "name": "dhc-to-postman",
+    "source_format": "dhc-to-postman",
+    "sample_input": {
+      "version": 3,
+      "nodes": [
+          {
+              "id": "F6D28886-F05D-46EB-ADE5-91A226F07644",
+              "lastModified": "2016-08-17T01:32:25.273+05:30",
+              "name": "TestProject",
+              "type": "Project"
+          },
+          {
+              "id": "DF49D8F6-BC83-41F1-ACF7-D0D337F473A2",
+              "lastModified": "2016-08-17T01:32:00.288+05:30",
+              "name": "Formdata",
+              "headers": [],
+              "metaInfo": {
+                  "ownerId": "Local repository id"
+              },
+              "type": "Request",
+              "method": {
+                  "requestBody": true,
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+                  "name": "POST"
+              },
+              "body": {
+                  "autoSetLength": true,
+                  "textBody": "",
+                  "formBody": {
+                      "encoding": "multipart/form-data",
+                      "items": [
+                          {
+                              "enabled": true,
+                              "name": "mutlipart",
+                              "value": "formdata",
+                              "type": "Text"
+                          },
+                          {
+                              "enabled": true,
+                              "name": "k2",
+                              "value": "v2",
+                              "type": "Text"
+                          }
+                      ]
+                  },
+                  "bodyType": "Form"
+              },
+              "headersType": "Form",
+              "uri": {
+                  "path": "httpbin.org/post",
+                  "scheme": {
+                      "name": "http",
+                      "version": "V11"
+                  }
+              },
+              "parentId": "F6D28886-F05D-46EB-ADE5-91A226F07644"
+          }
+      ]
+    }
+  },
   "publishConfig": {
     "registry": "https://npm.postmanlabs.com"
   },
   "scripts": {
-    "test": "scripts/test.sh"
+    "test": "scripts/test.sh",
+    "test-unit": "scripts/test-unit.sh"
   },
   "repository": {
     "type": "git",
