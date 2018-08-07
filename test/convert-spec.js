@@ -5,10 +5,12 @@ var expect = require('expect.js'),
 /* global describe, it */
 describe('the converter', function () {
     it('must convert a basic dhc file', function () {
-        var dhcJson = fs.readFileSync('test/dhc.json').toString(),
-        	convertedJSON = converter.convert(dhcJson);
-        expect(convertedJSON).to.be.ok();
-        expect(convertedJSON.requests.length).to.be(4);
-        expect(convertedJSON.order.length).to.be(4);
+        var dhcJson = fs.readFileSync('test/dhc.json').toString();
+        
+        converter.convert(dhcJson,function(err,convertedJSON){
+            expect(convertedJSON.collection).to.be.ok();
+            expect(convertedJSON.collection.item.length).to.be(4);
+            //expect(convertedJSON.collection.order.length).to.be(4);  
+        });
     });
 });
