@@ -6,11 +6,16 @@ var expect = require('expect.js'),
 describe('the converter', function () {
     it('must convert a basic dhc file', function () {
         var dhcJson = fs.readFileSync('test/dhc.json').toString();
-        
-        converter.convert(dhcJson,function(err,convertedJSON){
-            expect(convertedJSON.collection).to.be.ok();
-            expect(convertedJSON.collection.item.length).to.be(4);
-            //expect(convertedJSON.collection.order.length).to.be(4);  
+
+        converter.convert(dhcJson, function (err, ConversionResult) {
+            expect(ConversionResult.result).to.be(true);
+            ConversionResult.output.forEach(function (element) {
+                expect(element.type).to.be('collection' || 'request');
+                if (element.type === 'collection') {
+                    expect(element.data).to.be.ok();
+                    expect(element.data.item.length).to.be(4);
+                }
+            });  
         });
     });
 });

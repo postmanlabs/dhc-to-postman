@@ -38,11 +38,14 @@ describe(package.name + ' should contains', function() {
         ConversionResult
       ) {
         expect(ConversionResult.result).to.be(true);
-        expect(ConversionResult.type).to.be('collection' || 'request');
-        if (ConversionResult.type === 'collection') {
-          expect(ConversionResult.collection).to.have.property('info');
-          expect(ConversionResult.collection).to.have.property('item');
-        }
+        ConversionResult.output.forEach(element => {
+          expect(element.type).to.be('collection' || 'request');
+          if (element.type === 'collection') {
+            expect(element.data).to.have.property('info');
+            expect(element.data).to.have.property('item');
+          }
+        });
+        
       });
     });
   });

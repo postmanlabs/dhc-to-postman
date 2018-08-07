@@ -167,15 +167,19 @@ module.exports = {
 				}
 				cb(null,{
 					result:true,
-					type:'collection',
-					collection:result
+					output:[
+						{
+							type:'collection',
+							data:result
+						}
+					]
+					
 				});
 			});
 		}
 		catch(e){
 			cb(e,{
 				result:false,
-				type:'collection',
 				reason:e
 			});
 		}
