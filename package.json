@@ -1,97 +1,289 @@
 {
-  "name": "@postman/dhc-to-postman",
-  "version": "0.0.4",
-  "description": "Convert DHC Tests to Postman Collection v1",
-  "main": "index.js",
-  "com_postman_plugin": {
-    "plugin_type": "importer",
-    "name": "dhc-to-postman",
-    "source_format": "dhc-to-postman",
-    "sample_input": {
-      "version": 3,
-      "nodes": [
-          {
-              "id": "F6D28886-F05D-46EB-ADE5-91A226F07644",
-              "lastModified": "2016-08-17T01:32:25.273+05:30",
-              "name": "TestProject",
-              "type": "Project"
-          },
-          {
-              "id": "DF49D8F6-BC83-41F1-ACF7-D0D337F473A2",
-              "lastModified": "2016-08-17T01:32:00.288+05:30",
-              "name": "Formdata",
-              "headers": [],
-              "metaInfo": {
-                  "ownerId": "Local repository id"
-              },
+    "name": "@postman/dhc-to-postman",
+    "version": "0.0.4",
+    "description": "Convert DHC Tests to Postman Collection v1",
+    "main": "index.js",
+    "com_postman_plugin": {
+        "plugin_type": "importer",
+        "name": "dhc-to-postman",
+        "source_format": "dhc-to-postman",
+        "sample_input": {
+          "front-version": "2.18.0",
+          "version": 3,
+          "nodes": [
+            {
+              "type": "Project",
+              "id": "b1976a89-5a67-441e-a5de-7d0e3cd5e981",
+              "lastModified": "2018-08-08T16:46:37.413+05:30",
+              "name": "helloproject"
+            },
+            {
+              "type": "Service",
+              "id": "4b81b0da-a363-4f98-9bff-1ee6579c55b4",
+              "lastModified": "2018-08-08T12:09:09.683+05:30",
+              "name": "hai_",
+              "parentId": "b1976a89-5a67-441e-a5de-7d0e3cd5e981"
+            },
+            {
+              "uriEditor": true,
               "type": "Request",
               "method": {
-                  "requestBody": true,
-                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
-                  "name": "POST"
+                "requestBody": true,
+                "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+                "name": "POST"
               },
               "body": {
-                  "autoSetLength": true,
-                  "textBody": "",
-                  "formBody": {
-                      "encoding": "multipart/form-data",
-                      "items": [
-                          {
-                              "enabled": true,
-                              "name": "mutlipart",
-                              "value": "formdata",
-                              "type": "Text"
-                          },
-                          {
-                              "enabled": true,
-                              "name": "k2",
-                              "value": "v2",
-                              "type": "Text"
-                          }
-                      ]
-                  },
-                  "bodyType": "Form"
+                "formBody": {
+                  "overrideContentType": true,
+                  "encoding": "application/x-www-form-urlencoded",
+                  "items": [
+                    {
+                      "enabled": true,
+                      "type": "Text",
+                      "name": "dasdf",
+                      "value": "fdasfafafa"
+                    },
+                    {
+                      "enabled": true,
+                      "type": "Text",
+                      "name": "fadfa",
+                      "value": "fdsfagsdg"
+                    }
+                  ]
+                },
+                "bodyType": "Form",
+                "autoSetLength": true
               },
               "headersType": "Form",
               "uri": {
-                  "path": "httpbin.org/post",
-                  "scheme": {
-                      "name": "http",
-                      "version": "V11"
-                  }
+                "query": {
+                  "delimiter": "&",
+                  "items": [
+                    {
+                      "enabled": false,
+                      "encoded": true,
+                      "name": "sdgfsdg",
+                      "value": "gsfgdsgsdf"
+                    }
+                  ]
+                },
+                "scheme": {
+                  "secure": true,
+                  "name": "https",
+                  "version": "V11"
+                },
+                "host": "google.com",
+                "path": ""
               },
-              "parentId": "F6D28886-F05D-46EB-ADE5-91A226F07644"
-          }
-      ]
-    }
-  },
-  "publishConfig": {
-    "registry": "https://npm.postmanlabs.com"
-  },
-  "scripts": {
-    "test": "scripts/test.sh",
-    "test-unit": "scripts/test-unit.sh"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/abhijitkane/dhc-to-postman.git"
-  },
-  "keywords": [
-    "dhc",
-    "postman"
-  ],
-  "dependencies": {
-    "istanbul": "^0.4.5",
-    "lodash": "^4.17.5",
-    "postman-collection-transformer": "^2.6.2",
-    "uuid": "^3.2.1"
-  },
-  "devDependencies": {
-    "expect.js": "^0.3.1",
-    "jscs": "^2.1.0",
-    "jshint": "^2.8.0",
-    "mocha": "5.2.0"
-  },
-  "author": "Postman Labs",
-  "license": "MIT"
+              "id": "5a5ae734-0b8a-4f76-b31d-baed41214ff3",
+              "lastModified": "2018-08-08T16:46:37.413+05:30",
+              "name": "Request 2",
+              "headers": [
+                {
+                  "enabled": true,
+                  "name": "Content-Type",
+                  "value": "application/x-www-form-urlencoded"
+                },
+                {
+                  "enabled": true,
+                  "name": "token",
+                  "value": "hello"
+                },
+                {
+                  "enabled": true,
+                  "name": "Authorization",
+                  "value": "Basic dXNlcm5hbWUxOnBhc3N3b3JkMQ=="
+                }
+              ],
+              "metaInfo": {},
+              "parentId": "4b81b0da-a363-4f98-9bff-1ee6579c55b4"
+            },
+            {
+              "type": "Request",
+              "method": {
+                "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                "name": "GET"
+              },
+              "body": {
+                "formBody": {
+                  "overrideContentType": true,
+                  "encoding": "application/x-www-form-urlencoded",
+                  "items": []
+                },
+                "bodyType": "Text",
+                "autoSetLength": true
+              },
+              "headersType": "Form",
+              "uri": {
+                "query": {
+                  "delimiter": "&",
+                  "items": []
+                },
+                "scheme": {
+                  "secure": true,
+                  "name": "https",
+                  "version": "V11"
+                },
+                "host": "httpbin.org",
+                "path": ""
+              },
+              "id": "2580db00-3038-4ebf-a1ec-2441842772a2",
+              "lastModified": "2018-08-08T12:09:09.683+05:30",
+              "name": "first_req",
+              "headers": [],
+              "metaInfo": {
+                "IS_FROM_HISTORY": null
+              },
+              "parentId": "4b81b0da-a363-4f98-9bff-1ee6579c55b4"
+            },
+            {
+              "type": "Service",
+              "id": "0cf059d7-eeb0-401d-b2c2-887c745f024d",
+              "lastModified": "2018-08-08T14:36:56.422+05:30",
+              "name": "hai_1",
+              "parentId": "b1976a89-5a67-441e-a5de-7d0e3cd5e981"
+            },
+            {
+              "type": "Request",
+              "method": {
+                "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                "name": "GET"
+              },
+              "body": {
+                "formBody": {
+                  "overrideContentType": true,
+                  "encoding": "application/x-www-form-urlencoded",
+                  "items": []
+                },
+                "bodyType": "Text",
+                "autoSetLength": true
+              },
+              "headersType": "Form",
+              "uri": {
+                "scheme": {
+                  "secure": true,
+                  "name": "https",
+                  "version": "V11"
+                }
+              },
+              "id": "cffa7381-8da0-4d0d-aa33-13577d61540a",
+              "lastModified": "2018-08-08T12:35:12.983+05:30",
+              "name": "Request 1",
+              "headers": [],
+              "metaInfo": {
+                "ownerId": null
+              },
+              "parentId": "0cf059d7-eeb0-401d-b2c2-887c745f024d"
+            },
+            {
+              "type": "Scenario",
+              "id": "28e695e4-e729-4846-b517-8278cb3703ed",
+              "lastModified": "2018-08-08T14:36:24.533+05:30",
+              "name": "max",
+              "requestOrder": [
+                "Request 1",
+                "Request 2"
+              ],
+              "parentId": "b1976a89-5a67-441e-a5de-7d0e3cd5e981"
+            },
+            {
+              "type": "Request",
+              "method": {
+                "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                "name": "GET"
+              },
+              "body": {
+                "formBody": {
+                  "overrideContentType": true,
+                  "encoding": "application/x-www-form-urlencoded",
+                  "items": []
+                },
+                "bodyType": "Text",
+                "autoSetLength": true
+              },
+              "headersType": "Form",
+              "uri": {
+                "scheme": {
+                  "secure": true,
+                  "name": "https",
+                  "version": "V11"
+                }
+              },
+              "id": "23311998-3b5f-461e-be29-4971aa1f5550",
+              "lastModified": "2018-08-08T14:36:24.533+05:30",
+              "name": "Request 1",
+              "headers": [],
+              "metaInfo": {},
+              "parentId": "28e695e4-e729-4846-b517-8278cb3703ed"
+            },
+            {
+              "type": "Request",
+              "method": {
+                "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                "name": "GET"
+              },
+              "body": {
+                "formBody": {
+                  "overrideContentType": true,
+                  "encoding": "application/x-www-form-urlencoded",
+                  "items": []
+                },
+                "bodyType": "Text",
+                "autoSetLength": true
+              },
+              "headersType": "Form",
+              "uri": {
+                "scheme": {
+                  "secure": true,
+                  "name": "https",
+                  "version": "V11"
+                }
+              },
+              "id": "82f76906-bd75-40c9-9c90-b809a4bc216f",
+              "lastModified": "2018-08-08T14:36:24.533+05:30",
+              "name": "Request 2",
+              "headers": [],
+              "assertions": [
+                {
+                  "comparison": "Equals",
+                  "subject": "ResponseStatus",
+                  "path": "code",
+                  "value": "200"
+                }
+              ],
+              "metaInfo": {},
+              "parentId": "28e695e4-e729-4846-b517-8278cb3703ed"
+            }
+          ]
+        }
+    },
+    "publishConfig": {
+        "registry": "https://npm.postmanlabs.com"
+    },
+    "scripts": {
+        "test": "scripts/test.sh",
+        "test-unit": "scripts/test-unit.sh"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/abhijitkane/dhc-to-postman.git"
+    },
+    "keywords": [
+        "dhc",
+        "postman"
+    ],
+    "dependencies": {
+        "istanbul": "^0.4.5",
+        "lodash": "^4.17.5",
+        "postman-collection-transformer": "^2.6.2",
+        "uuid": "^3.2.1"
+    },
+    "devDependencies": {
+        "expect.js": "^0.3.1",
+        "jscs": "^2.1.0",
+        "jshint": "^2.8.0",
+        "mocha": "5.2.0"
+    },
+    "author": "Postman Labs",
+    "license": "MIT"
 }

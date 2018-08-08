@@ -15,7 +15,7 @@ describe(package.name + ' should contains', function() {
       expect(package.com_postman_plugin).to.have.property('source_format');
     });
     it('sample_input', function () {
-      expect(package.com_postman_plugin.hasOwnProperty('sample_input')).to.equal(true);
+      expect(package.com_postman_plugin).to.have.property('sample_input');
     });
   });
   describe('functions', function() {
