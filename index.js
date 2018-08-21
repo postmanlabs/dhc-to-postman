@@ -271,7 +271,7 @@ module.exports = {
       return dhcConverter.validate(data);
     }
     else if(input.type === 'file'){
-      data=fs.readFileSync(input.data);
+      data=fs.readFileSync(input.data).toString();
       data=JSON.parse(data);
       return dhcConverter.validate(data);
     }
@@ -298,7 +298,7 @@ module.exports = {
       data=input.data;
     }
     else if(input.type === 'file'){
-      data=fs.readFileSync(input.data);
+      data=fs.readFileSync(input.data).toString();
       data=JSON.parse(data);
     }
     else{
