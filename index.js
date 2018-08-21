@@ -1,5 +1,6 @@
 var _ = require('lodash'),
 //  uuidv4 = require('uuid/v4');
+  fs = require('fs'),
   sdk=require('postman-collection');
 
 var dhcConverter = {
@@ -235,16 +236,10 @@ var dhcConverter = {
   },
 
   convert: function(dhcJson) {
-    if (typeof dhcJson === 'string') {
-      dhcJson = JSON.parse(dhcJson);
-    }
     var collection = this.convertDhcProject(dhcJson);
     return collection;
   },
   validate: function(dhcJson) {
-    if (typeof dhcJson === 'string') {
-      dhcJson = JSON.parse(dhcJson);
-    }
     if (!dhcJson.version) {
       return {
         result: false,
@@ -264,11 +259,52 @@ var dhcConverter = {
 };
 
 module.exports = {
-  validate: dhcConverter.validate,
-  convert: function(input, cb) {
-    var conversionResult;
-    try {
-      conversionResult = dhcConverter.convert(input);
+  validate:function(input){
+    try{
+      var data;
+    if(input.type === 'string'){
+      data=JSON.parse(input.data);
+      return dhcConverter.validate(data);
+    }
+    else if(input.type === 'json'){
+      data=input.data;
+      return dhcConverter.validate(data);
+    }
+    else if(input.type === 'file'){
+      data=fs.readFileSync(input.data);
+      data=JSON.parse(data);
+      return dhcConverter.validate(data);
+    }
+    else{
+      throw 'input type is not valid';
+    }
+    }
+    catch(e){
+      return {
+        result:false,
+        reason:e.toString()
+      };
+    }
+    
+
+  } ,
+  convert: function(input,options, cb) {
+    var data;
+    try{
+    if(input.type === 'string'){
+      data=JSON.parse(input.data);
+    }
+    else if(input.type === 'json'){
+      data=input.data;
+    }
+    else if(input.type === 'file'){
+      data=fs.readFileSync(input.data);
+      data=JSON.parse(data);
+    }
+    else{
+      throw 'input type is not valid';
+    }
+    var conversionResult = dhcConverter.convert(data);
       cb(null, {
         result: true,
         output: [
@@ -278,11 +314,12 @@ module.exports = {
           }
         ]
       });
-    } catch (e) {
+    }
+   catch (e) {
       console.log(e);
-      cb(e, {
+      cb(null, {
         result: false,
-        reason: e
+        reason: e.toString()
       });
     }
   }
