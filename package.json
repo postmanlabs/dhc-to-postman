@@ -88,6 +88,7 @@
         ]
       }
     }
+    
   },
   "publishConfig": {
     "registry": "https://npm.postmanlabs.com"
