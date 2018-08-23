@@ -15,7 +15,7 @@ describe('the converter', function() {
       console.log(err);
       expect(ConversionResult.result).to.be(true);
       ConversionResult.output.forEach(function(element) {
-        expect(element.type).to.be.within('collection', 'request');
+        expect(element.type).to.be.within('collection', 'request', 'environment');
         if (element.type === 'collection') {
           expect(element.data).to.be.ok();
           expect(element.data.item.length).to.be(4);

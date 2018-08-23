@@ -7,15 +7,16 @@ set -e;
 
 # echo;
 
-jshint --version;
-jshint ./index.js test/;
-echo "No code lint issues found.";
+# jshint --version;
+# jshint ./index.js test/;
+# echo "No code lint issues found.";
 
 echo
 echo "Running unit tests..."
 echo "mocha v`mocha --version`";
 
-#mocha test/*-spec.js;
+npm run test-lint;
 
-chmod +x scripts/test-unit.sh;
+mocha test/*-spec.js;
+
 npm run test-unit;
