@@ -179,7 +179,8 @@ var _ = require('lodash'),
           dhcEnvis = {},
           output = [],
           prethis = this,
-          dhcRequest, //used in for-in
+          //following are used in for-in
+          dhcRequest,
           dhcScenario,
           dhcService,
           dhcProject,
@@ -232,10 +233,10 @@ var _ = require('lodash'),
               break;
             }
             default: {
-              return {
+              return cb(null, {
                 result: false,
                 reason: node.type + 'in' + JSON.stringify(node) + 'is not valid'
-              };
+              });
             }
           }
         });
@@ -263,6 +264,7 @@ var _ = require('lodash'),
                 dhcProjects[id].item.push(pmRequest);
                 delete dhcRequests[dhcRequest];
               }
+              //if needed we can add an error parent id not found
             }
             else {
               dhcProjects[default_name].item.push(pmRequest);
@@ -283,6 +285,7 @@ var _ = require('lodash'),
               dhcProjects[id].item.push(pmFolder);
               delete dhcScenarios[dhcScenario];
             }
+            //if needed we can add error showing parent id not found.
           }
           else {
             dhcProjects[default_name].item.push(pmFolder);
@@ -298,6 +301,7 @@ var _ = require('lodash'),
               dhcProjects[id].item.push(pmFolder);
               delete dhcServices[dhcService];
             }
+            //if needed we can add error showing parent id not found
           }
           else {
             dhcProjects[default_name].item.push(pmFolder);
