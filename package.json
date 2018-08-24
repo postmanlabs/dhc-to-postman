@@ -58,7 +58,6 @@
         ]
       }
     }
-    
   },
   "publishConfig": {
     "registry": "https://npm.postmanlabs.com"
@@ -83,6 +82,7 @@
     "uuid": "3.2.1"
   },
   "devDependencies": {
+    "eslint": "5.4.0",
     "expect.js": "0.3.1",
     "jscs": "2.1.0",
     "jshint": "2.8.0",
