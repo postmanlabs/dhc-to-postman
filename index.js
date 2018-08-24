@@ -38,7 +38,7 @@ var _ = require('lodash'),
     },
 
     convertToPmUrl: function(uri) {
-      var url = {
+      var pmUrl = {
           raw: '',
           query: [],
           variables: []
@@ -60,14 +60,14 @@ var _ = require('lodash'),
             else {
               str = str + obj.key + '=' + obj.value + '&';
             }
-            url.query.push(obj);
+            pmUrl.query.push(obj);
           });
           str = str.slice(0, -1);
-          url.raw = str;
+          pmUrl.raw = str;
         }
       }
 
-      return url;
+      return pmUrl;
     },
     convertToPmHeaders: function(headers) {
       var pmHeader = [];
@@ -184,18 +184,15 @@ var _ = require('lodash'),
           dhcRequests = {},
           dhcEnvis = {},
           output = [],
-          prethis = this,
+          xthis = this,
           //following are used in for-in
-          dhcRequest,
-          dhcScenario,
-          dhcService,
-          dhcProject,
+          id,
           parent_id,
           pmRequest,
+          pmFolder,
           collection,
           dhcEnvi,
           environment,
-          pmFolder,
           str,
           arr = [];
 
@@ -208,7 +205,7 @@ var _ = require('lodash'),
           });
         }
         dhcJson = JSON.parse(str);
-        dhcJson.nodes.forEach(function(node) {
+        dhcJson.nodes.forEach((node) => {
           var obj = {
             node: node,
             item: []
@@ -240,12 +237,16 @@ var _ = require('lodash'),
               break;
             }
             default: {
-              return cb(null, {
+              cb(null, {
                 result: false,
-                reason: node.type + 'in' + JSON.stringify(node) + 'is not valid'
+                reason: 'type:' + node.type + ' in' + JSON.stringify(node) + 'is not valid'
               });
+
+              return false;
             }
           }
+
+          return true;
         });
         //adding default project to projects
         dhcProjects[default_name] = {
@@ -256,10 +257,10 @@ var _ = require('lodash'),
           },
           item: []
         };
-        for (dhcRequest in dhcRequests) {
-          if (dhcRequests.hasOwnProperty(dhcRequest)) {
-            parent_id = dhcRequests[dhcRequest].node.parentId;
-            pmRequest = prethis.convertToPmRequest(dhcRequests[dhcRequest].node);
+        for (id in dhcRequests) {
+          if (dhcRequests.hasOwnProperty(id)) {
+            parent_id = dhcRequests[id].node.parentId;
+            pmRequest = xthis.convertToPmRequest(dhcRequests[id].node);
             if (parent_id) {
               if (dhcScenarios[parent_id]) {
                 dhcScenarios[parent_id].item.push(pmRequest);
@@ -282,10 +283,10 @@ var _ = require('lodash'),
             }
           }
         }
-        for (dhcScenario in dhcScenarios) {
-          if (dhcScenarios.hasOwnProperty(dhcScenario)) {
-            parent_id = dhcScenarios[dhcScenario].node.parentId;
-            pmFolder = prethis.convertToPmFolder(dhcScenarios[dhcScenario]);
+        for (id in dhcScenarios) {
+          if (dhcScenarios.hasOwnProperty(id)) {
+            parent_id = dhcScenarios[id].node.parentId;
+            pmFolder = xthis.convertToPmFolder(dhcScenarios[id]);
             if (parent_id) {
               if (dhcServices[parent_id]) {
                 dhcServices[parent_id].item.push(pmFolder);
@@ -305,10 +306,10 @@ var _ = require('lodash'),
             }
           }
         }
-        for (dhcService in dhcServices) {
-          if (dhcScenarios.hasOwnProperty(dhcScenario)) {
-            parent_id = dhcServices[dhcService].node.parentId;
-            pmFolder = prethis.convertToPmFolder(dhcServices[dhcService]);
+        for (id in dhcServices) {
+          if (dhcServices.hasOwnProperty(id)) {
+            parent_id = dhcServices[id].node.parentId;
+            pmFolder = xthis.convertToPmFolder(dhcServices[id]);
             if (parent_id) {
               if (dhcProjects[parent_id]) {
                 dhcProjects[parent_id].item.push(pmFolder);
@@ -322,15 +323,14 @@ var _ = require('lodash'),
             }
             else {
               dhcProjects[default_name].item.push(pmFolder);
-              delete dhcServices[dhcService];
             }
           }
         }
-        for (dhcProject in dhcProjects) {
-          if (dhcProjects.hasOwnProperty(dhcProject)) {
-            collection = prethis.createCollection(dhcProjects[dhcProject]);
+        for (id in dhcProjects) {
+          if (dhcProjects.hasOwnProperty(id)) {
+            collection = xthis.createCollection(dhcProjects[id]);
             //does not create collection for default project with empty items.
-            if (collection.item.length !== 0 || dhcProject !== default_name) {
+            if (collection.item.length !== 0 || id !== default_name) {
               output.push({
                 type: 'collection',
                 data: collection
@@ -340,7 +340,7 @@ var _ = require('lodash'),
         }
         for (dhcEnvi in dhcEnvis) {
           if (dhcEnvis.hasOwnProperty(dhcEnvi)) {
-            environment = prethis.convertTOPmEnvi(dhcEnvis[dhcEnvi].node);
+            environment = xthis.convertTOPmEnvi(dhcEnvis[dhcEnvi].node);
             output.push({
               type: 'environment',
               data: environment
@@ -358,13 +358,13 @@ var _ = require('lodash'),
       }
     },
     validate: function(dhcJson) {
-      if (!dhcJson.version) {
+      if (!dhcJson.hasOwnProperty('version')) {
         return {
           result: false,
           reason: 'The input object must have a "version" property'
         };
       }
-      if (!dhcJson.nodes) {
+      if (!dhcJson.hasOwnProperty('nodes')) {
         return {
           result: false,
           reason: 'The input object must have a "nodes" property'
