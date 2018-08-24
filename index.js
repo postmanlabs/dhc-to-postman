@@ -1,7 +1,5 @@
 var _ = require('lodash'),
-  //  uuidv4 = require('uuid/v4');
   fs = require('fs'),
-  sdk = require('postman-collection'),
   default_name = 'Converted From ' + require('./package.json').com_postman_plugin.source_format_name,
   dhcConverter = {
     collection: {},
@@ -17,53 +15,41 @@ var _ = require('lodash'),
       'VIEW',
       'OPTIONS'
     ],
-    createCollection: function(name) {
+    createCollection: function(project) {
       return {
         info: {
-          name: name,
+          name: project.node.name,
           description: '',
           schema:
             'https://schema.getpostman.com/json/collection/v2.1.0/collection.json'
         },
-        item: []
+        item: project.item
       };
     },
 
     convertToPmFolder: function(dhcFolder) {
       var folder = {
-        name: dhcFolder.name,
+        name: dhcFolder.node.name,
         description: '',
-        item: []
+        item: dhcFolder.item
       };
 
       return folder;
     },
 
-    convertToPmRequest: function(dhcRequest) {
-      var item = {
-          //_postman_id: dhcRequest.id.toLowerCase(),
-          name: dhcRequest.name,
-          request: {
-            method: dhcRequest.method.name,
-            header: [],
-            body: {},
-            url: {}
-          },
-          response: []
+    convertToPmUrl: function(uri) {
+      var url = {
+          raw: '',
+          query: [],
+          variables: []
         },
-        dhcBody,
-        request,
-        str = dhcRequest.uri.scheme.name + '://' + (dhcRequest.uri.host ? dhcRequest.uri.host : '') +
-        (dhcRequest.uri.path.substring(0, 1) === '/' ? '' : '/') + (dhcRequest.uri.path ? dhcRequest.uri.path : '');
+        str = uri.scheme.name + '://' + (uri.host ? uri.host : '') +
+          (uri.path.substring(0, 1) === '/' ? '' : '/') + (uri.path ? uri.path : '');
 
-      item.request.url = sdk.Url.parse(str);
-      str = item.request.url.raw;
-      item.request.url.query = [];
-      //url query params
-      if ('query' in dhcRequest.uri) {
-        if (dhcRequest.uri.query.items.length !== 0) {
+      if (uri.hasOwnProperty('query')) {
+        if (uri.query.items.length !== 0) {
           str += '?';
-          _.each(dhcRequest.uri.query.items, function(param) {
+          _.each(uri.query.items, function(param) {
             var obj = {};
 
             obj.key = param.name;
@@ -74,14 +60,19 @@ var _ = require('lodash'),
             else {
               str = str + obj.key + '=' + obj.value + '&';
             }
-            item.request.url.query.push(obj);
+            url.query.push(obj);
           });
           str = str.slice(0, -1);
+          url.raw = str;
         }
-        item.request.url.raw = str;
       }
 
-      _.each(dhcRequest.headers, function(dhcHeader) {
+      return url;
+    },
+    convertToPmHeaders: function(headers) {
+      var pmHeader = [];
+
+      _.each(headers, function(dhcHeader) {
         var header = {};
 
         header.key = dhcHeader.name;
@@ -89,23 +80,25 @@ var _ = require('lodash'),
         if (dhcHeader.enabled === false) {
           header.disabled = true;
         }
-        item.request.header.push(header);
+        pmHeader.push(header);
       });
 
-      if (
-        this.methodsWithBody.indexOf(item.request.method.toUpperCase()) > -1
-      ) {
-        dhcBody = dhcRequest.body;
-        request = item.request.body; //here request refers to body.
+      return pmHeader;
+    },
+    convertToPmBody: function(dhcBody, method) {
+      var pmBody = {};
 
+      if (
+        this.methodsWithBody.indexOf(method.toUpperCase()) > -1
+      ) {
         if (
           dhcBody.bodyType === 'Form' &&
           dhcBody.formBody &&
           dhcBody.formBody.encoding === 'multipart/form-data'
         ) {
           // multipart
-          request.mode = 'Formdata';
-          request.formdata = [];
+          pmBody.mode = 'Formdata';
+          pmBody.formdata = [];
           _.each(dhcBody.formBody.items, function(item) {
             if (item.type === 'Text') {
               var requestdata = {};
@@ -116,7 +109,7 @@ var _ = require('lodash'),
               if (!item.enabled) {
                 requestdata.disabled = true;
               }
-              request.formdata.push(requestdata);
+              pmBody.formdata.push(requestdata);
             }
           });
         }
@@ -126,8 +119,8 @@ var _ = require('lodash'),
           dhcBody.formBody.encoding === 'application/x-www-form-urlencoded'
         ) {
           // urlencoded
-          request.mode = 'urlencoded';
-          request.urlencoded = [];
+          pmBody.mode = 'urlencoded';
+          pmBody.urlencoded = [];
           _.each(dhcBody.formBody.items, function(item) {
             if (item.type === 'Text') {
               var requestdata = {};
@@ -138,18 +131,31 @@ var _ = require('lodash'),
               if (!item.enabled) {
                 requestdata.disabled = true;
               }
-              request.urlencoded.push(requestdata);
+              pmBody.urlencoded.push(requestdata);
             }
           });
         }
         else if (dhcBody.bodyType === 'Text' && dhcBody.textBody) {
           // raw
-          request.mode = 'raw';
-          request.raw = dhcBody.textBody;
+          pmBody.mode = 'raw';
+          pmBody.raw = dhcBody.textBody;
         }
       }
 
-      return item;
+      return pmBody;
+    },
+
+    convertToPmRequest: function(dhcRequest) {
+      return {
+        name: dhcRequest.name,
+        request: {
+          method: dhcRequest.method.name,
+          header: this.convertToPmHeaders(dhcRequest.headers),
+          body: this.convertToPmBody(dhcRequest.body, dhcRequest.method.name),
+          url: this.convertToPmUrl(dhcRequest.uri)
+        },
+        response: []
+      };
     },
     convertTOPmEnvi: function(dhcEnvi) {
       var pmEnvi = {
@@ -184,7 +190,7 @@ var _ = require('lodash'),
           dhcScenario,
           dhcService,
           dhcProject,
-          id,
+          parent_id,
           pmRequest,
           collection,
           dhcEnvi,
@@ -203,33 +209,34 @@ var _ = require('lodash'),
         }
         dhcJson = JSON.parse(str);
         dhcJson.nodes.forEach(function(node) {
+          var obj = {
+            node: node,
+            item: []
+          };
+
           switch (node.type) {
             case 'Project': {
-              dhcProjects[node.id] = {};
-              dhcProjects[node.id].node = node;
-              dhcProjects[node.id].item = [];
+              dhcProjects[node.id] = obj;
               break;
             }
             case 'Service': {
-              dhcServices[node.id] = {};
-              dhcServices[node.id].node = node;
-              dhcServices[node.id].item = [];
+              dhcServices[node.id] = obj;
               break;
             }
             case 'Scenario': {
-              dhcScenarios[node.id] = {};
-              dhcScenarios[node.id].node = node;
-              dhcScenarios[node.id].item = [];
+              dhcScenarios[node.id] = obj;
               break;
             }
             case 'Request': {
-              dhcRequests[node.id] = {};
-              dhcRequests[node.id].node = node;
+              dhcRequests[node.id] = {
+                node: node
+              };
               break;
             }
             case 'Context': {
-              dhcEnvis[node.id] = {};
-              dhcEnvis[node.id].node = node;
+              dhcEnvis[node.id] = {
+                node: node
+              };
               break;
             }
             default: {
@@ -240,93 +247,105 @@ var _ = require('lodash'),
             }
           }
         });
-        dhcProjects[default_name] = {};
-        dhcProjects[default_name].node = {
-          type: 'Project',
-          description: '',
-          name: default_name
+        //adding default project to projects
+        dhcProjects[default_name] = {
+          node: {
+            type: 'Project',
+            description: '',
+            name: default_name
+          },
+          item: []
         };
-        dhcProjects[default_name].item = [];
         for (dhcRequest in dhcRequests) {
-          if (dhcRequests[dhcRequest]) {
-            id = dhcRequests[dhcRequest].node.parentId;
+          if (dhcRequests.hasOwnProperty(dhcRequest)) {
+            parent_id = dhcRequests[dhcRequest].node.parentId;
             pmRequest = prethis.convertToPmRequest(dhcRequests[dhcRequest].node);
-            if (id) {
-              if (dhcScenarios[id]) {
-                dhcScenarios[id].item.push(pmRequest);
-                delete dhcRequests[dhcRequest];
+            if (parent_id) {
+              if (dhcScenarios[parent_id]) {
+                dhcScenarios[parent_id].item.push(pmRequest);
               }
-              else if (dhcServices[id]) {
-                dhcServices[id].item.push(pmRequest);
-                delete dhcRequests[dhcRequest];
+              else if (dhcServices[parent_id]) {
+                dhcServices[parent_id].item.push(pmRequest);
               }
-              else if (dhcProjects[id]) {
-                dhcProjects[id].item.push(pmRequest);
-                delete dhcRequests[dhcRequest];
+              else if (dhcProjects[parent_id]) {
+                dhcProjects[parent_id].item.push(pmRequest);
               }
-              //if needed we can add an error parent id not found
+              else {
+                return cb(null, {
+                  result: false,
+                  reason: 'nodes with parentId' + parent_id + ' is not found'
+                });
+              }
             }
             else {
               dhcProjects[default_name].item.push(pmRequest);
-              delete dhcRequests[dhcRequest];
             }
           }
         }
         for (dhcScenario in dhcScenarios) {
-          id = dhcScenarios[dhcScenario].node.parentId;
-          pmFolder = prethis.convertToPmFolder(dhcScenarios[dhcScenario].node);
-          pmFolder.item = dhcScenarios[dhcScenario].item;
-          if (id) {
-            if (dhcServices[id]) {
-              dhcServices[id].item.push(pmFolder);
-              delete dhcScenarios[dhcScenario];
+          if (dhcScenarios.hasOwnProperty(dhcScenario)) {
+            parent_id = dhcScenarios[dhcScenario].node.parentId;
+            pmFolder = prethis.convertToPmFolder(dhcScenarios[dhcScenario]);
+            if (parent_id) {
+              if (dhcServices[parent_id]) {
+                dhcServices[parent_id].item.push(pmFolder);
+              }
+              else if (dhcProjects[parent_id]) {
+                dhcProjects[parent_id].item.push(pmFolder);
+              }
+              else {
+                return cb(null, {
+                  result: false,
+                  reason: 'nodes with parentId' + parent_id + ' is not found'
+                });
+              }
             }
-            else if (dhcProjects[id]) {
-              dhcProjects[id].item.push(pmFolder);
-              delete dhcScenarios[dhcScenario];
+            else {
+              dhcProjects[default_name].item.push(pmFolder);
             }
-            //if needed we can add error showing parent id not found.
-          }
-          else {
-            dhcProjects[default_name].item.push(pmFolder);
-            delete dhcScenarios[dhcScenario];
           }
         }
         for (dhcService in dhcServices) {
-          id = dhcServices[dhcService].node.parentId;
-          pmFolder = prethis.convertToPmFolder(dhcServices[dhcService].node);
-          pmFolder.item = dhcServices[dhcService].item;
-          if (id) {
-            if (dhcProjects[id]) {
-              dhcProjects[id].item.push(pmFolder);
+          if (dhcScenarios.hasOwnProperty(dhcScenario)) {
+            parent_id = dhcServices[dhcService].node.parentId;
+            pmFolder = prethis.convertToPmFolder(dhcServices[dhcService]);
+            if (parent_id) {
+              if (dhcProjects[parent_id]) {
+                dhcProjects[parent_id].item.push(pmFolder);
+              }
+              else {
+                return cb(null, {
+                  result: false,
+                  reason: 'nodes with parentId' + parent_id + ' is not found'
+                });
+              }
+            }
+            else {
+              dhcProjects[default_name].item.push(pmFolder);
               delete dhcServices[dhcService];
             }
-            //if needed we can add error showing parent id not found
-          }
-          else {
-            dhcProjects[default_name].item.push(pmFolder);
-            delete dhcServices[dhcService];
           }
         }
         for (dhcProject in dhcProjects) {
-          collection = prethis.createCollection(
-            dhcProjects[dhcProject].node.name
-          );
-          collection.item = dhcProjects[dhcProject].item;
-          //does not create collection for default project with empty items.
-          if (collection.item.length !== 0 || dhcProject !== default_name) {
-            output.push({
-              type: 'collection',
-              data: collection
-            });
+          if (dhcProjects.hasOwnProperty(dhcProject)) {
+            collection = prethis.createCollection(dhcProjects[dhcProject]);
+            //does not create collection for default project with empty items.
+            if (collection.item.length !== 0 || dhcProject !== default_name) {
+              output.push({
+                type: 'collection',
+                data: collection
+              });
+            }
           }
         }
         for (dhcEnvi in dhcEnvis) {
-          environment = prethis.convertTOPmEnvi(dhcEnvis[dhcEnvi].node);
-          output.push({
-            type: 'environment',
-            data: environment
-          });
+          if (dhcEnvis.hasOwnProperty(dhcEnvi)) {
+            environment = prethis.convertTOPmEnvi(dhcEnvis[dhcEnvi].node);
+            output.push({
+              type: 'environment',
+              data: environment
+            });
+          }
         }
 
         return cb(null, {

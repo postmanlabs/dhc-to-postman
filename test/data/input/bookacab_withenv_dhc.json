@@ -1,0 +1,544 @@
+{
+  "front-version": "2.19.0",
+  "version": 3,
+  "nodes": [
+    {
+      "type": "Project",
+      "description": "## This collection:\n* books a cab if fare is less than max fare mentioned in environment.\n* runs for every 5min.\n* will terminate the process if cab is booked.\n* or else terminate after one hour,if the cab is not booked.",
+      "id": "f7355aa3-c817-409a-ae7a-2d3d8f93841e",
+      "lastModified": "2018-08-23T11:47:04.620+05:30",
+      "name": "book_a_cab"
+    },
+    {
+      "type": "Service",
+      "description": "* Finds a cab with least fare.",
+      "id": "f87013ae-e48b-4bb4-b9a9-a2b2914144ec",
+      "lastModified": "2018-08-23T11:38:56.279+05:30",
+      "name": "EstimatePrice&Time",
+      "parentId": "f7355aa3-c817-409a-ae7a-2d3d8f93841e"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "https://tools.ietf.org/html/rfc7231#section-4.3",
+        "name": "GET"
+      },
+      "body": {
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": ""
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": [
+            {
+              "enabled": true,
+              "name": "start_latitude",
+              "value": "${startLatitude}"
+            },
+            {
+              "enabled": true,
+              "name": "start_longitude",
+              "value": "${startLongitude}"
+            },
+            {
+              "enabled": true,
+              "name": "end_latitude",
+              "value": "${endLatitude}"
+            },
+            {
+              "enabled": true,
+              "name": "end_longitude",
+              "value": "${endLongitude}"
+            },
+            {
+              "enabled": true,
+              "name": "seat_count",
+              "value": "${seatCount}"
+            }
+          ]
+        },
+        "scheme": {
+          "secure": true,
+          "name": "https",
+          "version": "V11"
+        },
+        "host": "api.uber.com",
+        "path": "/v1.2/estimates/price"
+      },
+      "id": "1a485766-a896-4fec-8178-01ce220d9e2f",
+      "lastModified": "2018-08-23T11:38:56.279+05:30",
+      "name": "uberEstimatePrices",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "Bearer ${uber_token}"
+        },
+        {
+          "enabled": true,
+          "name": "Accept-Language",
+          "value": "en_US"
+        },
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/x-www-form-urlencoded"
+        }
+      ],
+      "assertions": [],
+      "metaInfo": {
+        "ownerId": "google-oauth2|113112938167483478662"
+      },
+      "parentId": "f87013ae-e48b-4bb4-b9a9-a2b2914144ec"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "https://tools.ietf.org/html/rfc7231#section-4.3",
+        "name": "GET"
+      },
+      "body": {
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": ""
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": [
+            {
+              "enabled": true,
+              "name": "start_latitude",
+              "value": "${startLatitude}"
+            },
+            {
+              "enabled": true,
+              "name": "start_longitude",
+              "value": "${startLongitude}"
+            }
+          ]
+        },
+        "scheme": {
+          "secure": true,
+          "name": "https",
+          "version": "V11"
+        },
+        "host": "api.uber.com",
+        "path": "/v1.2/estimates/time"
+      },
+      "id": "8d161630-2cf7-4901-a537-ab0cd8f5ff2b",
+      "lastModified": "2018-08-23T11:38:56.279+05:30",
+      "name": "uberEstimateTime",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "Bearer ${uber_token}"
+        },
+        {
+          "enabled": true,
+          "name": "Accept-Language",
+          "value": "en_US"
+        },
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "assertions": [],
+      "metaInfo": {
+        "ownerId": "google-oauth2|113112938167483478662"
+      },
+      "parentId": "f87013ae-e48b-4bb4-b9a9-a2b2914144ec"
+    },
+    {
+      "type": "Service",
+      "description": "Address -> Latitude&Longitude",
+      "id": "e23fd85b-07eb-4d4b-9cbb-72530580c9de",
+      "lastModified": "2018-08-23T11:38:56.278+05:30",
+      "name": "srcDestLatLong",
+      "parentId": "f7355aa3-c817-409a-ae7a-2d3d8f93841e"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "https://tools.ietf.org/html/rfc7231#section-4.3",
+        "name": "GET"
+      },
+      "body": {
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": ""
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": [
+            {
+              "enabled": true,
+              "name": "address",
+              "value": "${dest}"
+            },
+            {
+              "enabled": true,
+              "name": "key",
+              "value": "${google_api_key}"
+            }
+          ]
+        },
+        "scheme": {
+          "secure": true,
+          "name": "https",
+          "version": "V11"
+        },
+        "host": "maps.googleapis.com",
+        "path": "/maps/api/geocode/json"
+      },
+      "id": "f4c0601b-5317-4847-ac0f-0926b8adaff0",
+      "lastModified": "2018-08-23T11:47:04.620+05:30",
+      "name": "geoCodeDest",
+      "headers": [],
+      "assertions": [],
+      "metaInfo": {
+        "ownerId": "google-oauth2|113112938167483478662"
+      },
+      "parentId": "e23fd85b-07eb-4d4b-9cbb-72530580c9de"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "https://tools.ietf.org/html/rfc7231#section-4.3",
+        "name": "GET"
+      },
+      "body": {
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": ""
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": [
+            {
+              "enabled": true,
+              "name": "address",
+              "value": "${src}"
+            },
+            {
+              "enabled": true,
+              "name": "key",
+              "value": "${google_api_key}"
+            }
+          ]
+        },
+        "scheme": {
+          "secure": true,
+          "name": "https",
+          "version": "V11"
+        },
+        "host": "maps.googleapis.com",
+        "path": "/maps/api/geocode/json"
+      },
+      "id": "ede75217-47ea-4a8c-9547-acf6ade5d091",
+      "lastModified": "2018-08-23T11:38:56.278+05:30",
+      "name": "geoCodeSrc",
+      "headers": [],
+      "assertions": [],
+      "metaInfo": {
+        "ownerId": "google-oauth2|113112938167483478662"
+      },
+      "parentId": "e23fd85b-07eb-4d4b-9cbb-72530580c9de"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "https://tools.ietf.org/html/rfc7231#section-4.3",
+        "name": "POST"
+      },
+      "body": {
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n  \"product_id\":\"${productId}\",\n  \"fare_id\":\"${fareId}\",\n  \"start_latitude\": \"${startLatitude}\",\n  \"start_longitude\": \"${startLongitude}\",\n  \"end_latitude\": \"${endLatitude}\",\n  \"end_longitude\": \"${endLongitude}\",\n  \"seat_count\":\"${seatCount}\"\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "scheme": {
+          "secure": true,
+          "name": "https",
+          "version": "V11"
+        },
+        "path": "api.uber.com/v1.2/requests"
+      },
+      "description": "* books a selected product(cab).",
+      "id": "720feee5-6acf-44b2-9f19-0eab705f33ec",
+      "lastModified": "2018-08-23T11:38:56.279+05:30",
+      "name": "cabBooking",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "Bearer ${uber_token}"
+        }
+      ],
+      "assertions": [],
+      "metaInfo": {
+        "ownerId": "google-oauth2|113112938167483478662"
+      },
+      "parentId": "f7355aa3-c817-409a-ae7a-2d3d8f93841e"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "https://tools.ietf.org/html/rfc7231#section-4.3",
+        "name": "POST"
+      },
+      "body": {
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n\t\"product_id\":\"${productId}\",\n\t\"start_latitude\": \"${startLatitude}\",\n\t\"start_longitude\": \"${startLongitude}\",\n\t\"end_latitude\": \"${endLatitude}\",\n\t\"end_longitude\": \"${endLongitude}\",\n\t\"seat_count\":\"${seatCount}\"\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "scheme": {
+          "secure": true,
+          "name": "https",
+          "version": "V11"
+        },
+        "path": "api.uber.com/v1.2/requests/estimate"
+      },
+      "description": "* Estimate product(cab) selected previously.\n* Also compares cab fare with max fare gives as input.\n",
+      "id": "31545cb4-a059-4b4c-82a9-bde037a57171",
+      "lastModified": "2018-08-23T11:38:56.279+05:30",
+      "name": "rideEstimate",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "Bearer ${uber_token}"
+        },
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "enabled": true,
+          "name": "Accept-Language",
+          "value": "en_US"
+        }
+      ],
+      "assertions": [],
+      "metaInfo": {
+        "ownerId": "google-oauth2|113112938167483478662"
+      },
+      "parentId": "f7355aa3-c817-409a-ae7a-2d3d8f93841e"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "https://tools.ietf.org/html/rfc7231#section-4.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": [
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "token",
+              "value": "${slack_bot_token}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "text",
+              "value": "${error}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "channel",
+              "value": "${Channel_Id}"
+            },
+            {
+              "enabled": true,
+              "type": "Text",
+              "name": "as_user",
+              "value": "false"
+            }
+          ]
+        },
+        "bodyType": "Form",
+        "autoSetLength": true
+      },
+      "headersType": "Form",
+      "uri": {
+        "scheme": {
+          "secure": true,
+          "name": "https",
+          "version": "V11"
+        },
+        "path": "slack.com/api/chat.postMessage"
+      },
+      "description": "Sends notification to slack.",
+      "id": "ef0bd858-d7a8-42c9-9cc4-fadf9037e680",
+      "lastModified": "2018-08-23T11:38:56.279+05:30",
+      "name": "sendNotification",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/x-www-form-urlencoded"
+        }
+      ],
+      "assertions": [],
+      "metaInfo": {
+        "ownerId": "google-oauth2|113112938167483478662"
+      },
+      "parentId": "f7355aa3-c817-409a-ae7a-2d3d8f93841e"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "https://tools.ietf.org/html/rfc7231#section-4.3",
+        "name": "POST"
+      },
+      "body": {
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": ""
+      },
+      "headersType": "Form",
+      "uri": {
+        "scheme": {
+          "secure": true,
+          "name": "https",
+          "version": "V11"
+        },
+        "path": "api.getpostman.com/monitors/${stopMonitor_uid}/run"
+      },
+      "description": "* starts a monitor that runs stopMonitor Collection",
+      "id": "74ba5e29-26ca-4507-adea-5c6d82993e81",
+      "lastModified": "2018-08-23T11:38:56.279+05:30",
+      "name": "stopProcess",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "X-Api-Key",
+          "value": "${postman_api_key}"
+        }
+      ],
+      "assertions": [],
+      "metaInfo": {
+        "ownerId": "google-oauth2|113112938167483478662"
+      },
+      "parentId": "f7355aa3-c817-409a-ae7a-2d3d8f93841e"
+    },
+    {
+      "type": "Context",
+      "id": "e5d39478-131f-413e-89f3-edd48828bdf0",
+      "lastModified": "2018-08-23T11:38:55.224+05:30",
+      "name": "book_a_cab",
+      "variables": [
+        {
+          "enabled": true,
+          "name": "src",
+          "value": ""
+        },
+        {
+          "enabled": true,
+          "name": "google_api_key",
+          "value": ""
+        },
+        {
+          "enabled": true,
+          "name": "dest",
+          "value": ""
+        },
+        {
+          "enabled": true,
+          "name": "uber_token",
+          "value": ""
+        },
+        {
+          "enabled": true,
+          "name": "startLatitude",
+          "value": ""
+        },
+        {
+          "enabled": true,
+          "name": "startLongitude",
+          "value": ""
+        },
+        {
+          "enabled": true,
+          "name": "endLatitude",
+          "value": ""
+        },
+        {
+          "enabled": true,
+          "name": "endLongitude",
+          "value": ""
+        },
+        {
+          "enabled": true,
+          "name": "seatCount",
+          "value": ""
+        },
+        {
+          "enabled": true,
+          "name": "productId",
+          "value": ""
+        },
+        {
+          "enabled": true,
+          "name": "fareId",
+          "value": ""
+        },
+        {
+          "enabled": true,
+          "name": "postman_api_key",
+          "value": ""
+        },
+        {
+          "enabled": true,
+          "name": "stopMonitor_uid",
+          "value": ""
+        },
+        {
+          "enabled": true,
+          "name": "slack_bot_token",
+          "value": ""
+        },
+        {
+          "enabled": true,
+          "name": "error",
+          "value": ""
+        },
+        {
+          "enabled": true,
+          "name": "Channel_Id",
+          "value": ""
+        }
+      ]
+    }
+  ]
+}
