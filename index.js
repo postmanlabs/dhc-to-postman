@@ -2,7 +2,7 @@ var _ = require('lodash'),
   //  uuidv4 = require('uuid/v4');
   fs = require('fs'),
   sdk = require('postman-collection'),
-  default_name = require('./package.json').com_postman_plugin.source_format_name,
+  default_name = 'Converted From ' + require('./package.json').com_postman_plugin.source_format_name,
   dhcConverter = {
     collection: {},
     methodsWithBody: [
