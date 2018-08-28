@@ -17,6 +17,4 @@ echo "mocha v`mocha --version`";
 
 npm run test-lint;
 
-mocha test/*-spec.js;
-
 npm run test-unit;
