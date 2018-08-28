@@ -3,11 +3,69 @@
   "version": "0.0.4",
   "description": "Convert DHC Tests to Postman Collection v1",
   "main": "index.js",
+  "com_postman_plugin": {
+    "plugin_type": "importer",
+    "name": "dhc-to-postman",
+    "source_format": "DHC",
+    "source_format_name": "DHC",
+    "sample_input": {
+      "type": "json",
+      "data": {
+        "front-version": "2.19.0",
+        "version": 3,
+        "nodes": [
+          {
+            "type": "Request",
+            "method": {
+              "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+              "name": "GET"
+            },
+            "body": {
+              "formBody": {
+                "overrideContentType": true,
+                "encoding": "application/x-www-form-urlencoded",
+                "items": []
+              }
+            },
+            "headersType": "Raw",
+            "uri": {
+              "query": {
+                "delimiter": "&",
+                "items": []
+              },
+              "scheme": {
+                "secure": true,
+                "name": "https",
+                "version": "V11"
+              },
+              "host": "${google}",
+              "path": "/.com"
+            },
+            "id": "7629bf37-ac46-4f49-8c0b-3670019fc337",
+            "lastModified": "2018-08-24T17:23:03.105+05:30",
+            "name": "hai",
+            "headers": [
+              {
+                "enabled": true,
+                "name": "hai",
+                "value": "hello"
+              }
+            ],
+            "metaInfo": {
+              "ownerId": "google-oauth2|113112938167483478662"
+            }
+          }
+        ]
+      }
+    }
+  },
   "publishConfig": {
     "registry": "https://npm.postmanlabs.com"
   },
   "scripts": {
-    "test": "scripts/test.sh"
+    "test": "scripts/test.sh",
+    "test-lint": "scripts/test-lint.sh",
+    "test-unit": "scripts/test-unit.sh"
   },
   "repository": {
     "type": "git",
@@ -18,13 +76,13 @@
     "postman"
   ],
   "dependencies": {
-    "lodash": "^4.17.5",
-    "uuid": "^3.2.1"
+    "istanbul": "0.4.5",
+    "lodash": "4.17.5"
   },
   "devDependencies": {
-    "expect.js": "^0.3.1",
-    "jscs": "^2.1.0",
-    "jshint": "^2.8.0",
+    "eslint": "5.4.0",
+    "eslint-plugin-security": "1.4.0",
+    "expect.js": "0.3.1",
     "mocha": "5.2.0"
   },
   "author": "Postman Labs",
