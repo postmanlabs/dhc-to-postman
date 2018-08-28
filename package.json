@@ -77,17 +77,13 @@
   ],
   "dependencies": {
     "istanbul": "0.4.5",
-    "lodash": "4.17.5",
-    "postman-collection": "3.1.1",
-    "uuid": "3.2.1"
+    "lodash": "4.17.5"
   },
   "devDependencies": {
     "eslint": "5.4.0",
-    "eslint-plugin-security": "^1.4.0",
+    "eslint-plugin-security": "1.4.0",
     "expect.js": "0.3.1",
-    "jscs": "2.1.0",
-    "jshint": "2.8.0",
-    "mocha": "5.2.0"
+    "jscs": "2.1.0"
   },
   "author": "Postman Labs",
   "license": "MIT"
