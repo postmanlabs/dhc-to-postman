@@ -1,5 +1,8 @@
+/*jshint esversion: 6 */
+
 var _ = require('lodash'),
-	uuidv4 = require('uuid/v4');
+	{ v4: uuidv4 } = require('uuid'),
+	UserError = require('./UserError');
 
 var dhcConverter = {
 	requestGroups: [],
@@ -102,23 +105,40 @@ var dhcConverter = {
 		var rootNode = _.find(obj.nodes, function (node) {
 				return node.type === 'Project';
 			}),
-			collection = this.createCollection(rootNode.name),
-			dhcRequests = _.filter(obj.nodes, function (node) {
-				return node.type === 'Request';
-			}),
+			collection,
+			dhcRequests,
 			oldThis = this;
 
+		collection = this.createCollection(_.get(rootNode, 'name', 'DHC Import'));
+		dhcRequests = _.filter(obj.nodes, function (node) {
+			return node.type === 'Request';
+		});
+
+		if (dhcRequests.length === 0) {
+			throw new UserError('No requests found in the DHC project');
+		}
+
 		_.each(dhcRequests, function (dhcRequest) {
-			var pmRequest = oldThis.convertToPmRequest(dhcRequest);
-			oldThis.addRequestToCollection(pmRequest, collection);
+			try {
+				var pmRequest = oldThis.convertToPmRequest(dhcRequest);
+				oldThis.addRequestToCollection(pmRequest, collection);
+			} catch (e) {
+				// ignore individual request errors if any and continue with other requests
+			}
 		});
 		return collection;
 	},
 
 	convert: function (dhcJson) {
-		if(typeof dhcJson === 'string') {
-			dhcJson = JSON.parse(dhcJson);
+		try {
+			if(typeof dhcJson === 'string') {
+				dhcJson = JSON.parse(dhcJson);
+			}
 		}
+		catch (error) {
+			throw new UserError('Provided data is invalid JSON');	
+		}
+
 		var collection = this.convertDhcProject(dhcJson);
 		return collection;
 	},
