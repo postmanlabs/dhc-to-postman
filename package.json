@@ -1,6 +1,6 @@
 {
   "name": "@postman/dhc-to-postman",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Convert DHC Tests to Postman Collection v1",
   "main": "index.js",
   "engines": {
