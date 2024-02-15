@@ -1,20 +1,17 @@
 {
-  "name": "dhc-to-postman",
+  "name": "@postman/dhc-to-postman",
   "version": "0.0.5",
   "description": "Convert DHC Tests to Postman Collection v1",
   "main": "index.js",
   "engines": {
     "node": ">=16"
   },
-  "publishConfig": {
-    "registry": "https://npm.postmanlabs.com"
-  },
   "scripts": {
     "test": "scripts/test.sh"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/postmanlabs/dhc-to-postman"
+    "url": "git+https://github.com/postmanlabs/dhc-to-postman.git"
   },
   "keywords": [
     "dhc",
