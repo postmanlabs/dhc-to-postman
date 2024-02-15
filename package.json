@@ -6,15 +6,12 @@
   "engines": {
     "node": ">=16"
   },
-  "publishConfig": {
-    "registry": "https://npm.postmanlabs.com"
-  },
   "scripts": {
     "test": "scripts/test.sh"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/abhijitkane/dhc-to-postman.git"
+    "url": "git+https://github.com/postmanlabs/dhc-to-postman.git"
   },
   "keywords": [
     "dhc",
